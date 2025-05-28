@@ -6,7 +6,14 @@
 
 using namespace std;
 
-// Function to display the fruits
+// Convert string to lowercase
+string toLowerCase(const string& str) {
+    string lowerStr = str;
+    transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
+    return lowerStr;
+}
+
+// Display fruits
 void displayFruits(const vector<string>& fruits) {
     cout << "Current Fruit List:\n";
     for (const string& fruit : fruits) {
@@ -14,7 +21,7 @@ void displayFruits(const vector<string>& fruits) {
     }
 }
 
-// Function to find the longest fruit name
+// Find longest fruit
 string findLongestFruit(const vector<string>& fruits) {
     string longest = "";
     for (const string& fruit : fruits) {
@@ -31,22 +38,22 @@ int main() {
     char choice;
 
     do {
-        fruits.clear(); // Clear the list each time the loop restarts
+        fruits.clear();
         int n;
 
-        // Input validation for number of fruits
+        // Validate number input
         while (true) {
             cout << "How many fruits would you like to enter? ";
             cin >> n;
 
             if (cin.fail()) {
                 cout << "Invalid input! Please enter a number.\n";
-                cin.clear(); // Clear error flag
-                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
             } else if (n <= 0) {
                 cout << "Please enter a positive number.\n";
             } else {
-                cin.ignore(); // Clear the newline character left in the buffer
+                cin.ignore();
                 break;
             }
         }
@@ -57,36 +64,41 @@ int main() {
             fruits.push_back(input);
         }
 
-        // Sort the fruits
+        // Sort alphabetically
         sort(fruits.begin(), fruits.end());
 
         cout << "\nSorted Fruit List (Ascending):\n";
         displayFruits(fruits);
 
-        // Find and display the longest fruit
+        // Find and show the longest fruit
         string longestFruit = findLongestFruit(fruits);
         cout << "\nThe longest fruit name is: " << longestFruit << endl;
 
-        // Display count
+        // Count fruits
         cout << "Total number of fruits: " << fruits.size() << endl;
 
-        // Remove a specific fruit
+        // Remove fruit (case-insensitive)
         cout << "Enter the name of the fruit to remove: ";
         getline(cin, fruitToRemove);
 
-        auto it = find(fruits.begin(), fruits.end(), fruitToRemove);
-        if (it != fruits.end()) {
-            fruits.erase(it);
-            cout << fruitToRemove << " has been removed.\n";
-        } else {
+        bool removed = false;
+        for (auto it = fruits.begin(); it != fruits.end(); ++it) {
+            if (toLowerCase(*it) == toLowerCase(fruitToRemove)) {
+                fruits.erase(it);
+                cout << fruitToRemove << " has been removed.\n";
+                removed = true;
+                break;
+            }
+        }
+        if (!removed) {
             cout << fruitToRemove << " not found in the list.\n";
         }
 
-        // Display updated list
+        // Show updated list
         cout << "\nUpdated Fruit List:\n";
         displayFruits(fruits);
 
-        // Ask if the user wants to repeat
+        // Ask if the user wants to try again
         cout << "\nDo you want to try again? (Y/N): ";
         cin >> choice;
         cin.ignore();
@@ -95,6 +107,6 @@ int main() {
 
     } while (tolower(choice) == 'y');
 
-    cout << "Program ended. Thank You!\n";
+    cout << "Program ended. Goodbye!\n";
     return 0;
 }
