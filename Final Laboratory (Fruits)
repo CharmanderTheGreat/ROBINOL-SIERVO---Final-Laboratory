@@ -1,0 +1,100 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <limits>
+
+using namespace std;
+
+// Function to display the fruits
+void displayFruits(const vector<string>& fruits) {
+    cout << "Current Fruit List:\n";
+    for (const string& fruit : fruits) {
+        cout << "- " << fruit << endl;
+    }
+}
+
+// Function to find the longest fruit name
+string findLongestFruit(const vector<string>& fruits) {
+    string longest = "";
+    for (const string& fruit : fruits) {
+        if (fruit.length() > longest.length()) {
+            longest = fruit;
+        }
+    }
+    return longest;
+}
+
+int main() {
+    vector<string> fruits;
+    string input, fruitToRemove;
+    char choice;
+
+    do {
+        fruits.clear(); // Clear the list each time the loop restarts
+        int n;
+
+        // Input validation for number of fruits
+        while (true) {
+            cout << "How many fruits would you like to enter? ";
+            cin >> n;
+
+            if (cin.fail()) {
+                cout << "Invalid input! Please enter a number.\n";
+                cin.clear(); // Clear error flag
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            } else if (n <= 0) {
+                cout << "Please enter a positive number.\n";
+            } else {
+                cin.ignore(); // Clear the newline character left in the buffer
+                break;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            cout << "Enter fruit #" << i + 1 << ": ";
+            getline(cin, input);
+            fruits.push_back(input);
+        }
+
+        // Sort the fruits
+        sort(fruits.begin(), fruits.end());
+
+        cout << "\nSorted Fruit List (Ascending):\n";
+        displayFruits(fruits);
+
+        // Find and display the longest fruit
+        string longestFruit = findLongestFruit(fruits);
+        cout << "\nThe longest fruit name is: " << longestFruit << endl;
+
+        // Display count
+        cout << "Total number of fruits: " << fruits.size() << endl;
+
+        // Remove a specific fruit
+        cout << "Enter the name of the fruit to remove: ";
+        getline(cin, fruitToRemove);
+
+        auto it = find(fruits.begin(), fruits.end(), fruitToRemove);
+        if (it != fruits.end()) {
+            fruits.erase(it);
+            cout << fruitToRemove << " has been removed.\n";
+        } else {
+            cout << fruitToRemove << " not found in the list.\n";
+        }
+
+        // Display updated list
+        cout << "\nUpdated Fruit List:\n";
+        displayFruits(fruits);
+
+        // Ask if the user wants to repeat
+        cout << "\nDo you want to try again? (Y/N): ";
+        cin >> choice;
+        cin.ignore();
+
+        cout << "\n-------------------------------------\n";
+
+    } while (tolower(choice) == 'y');
+
+    cout << "Program ended. Thank You!\n";
+    return 0;
+}
